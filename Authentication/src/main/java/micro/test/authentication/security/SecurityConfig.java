@@ -7,6 +7,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -29,8 +30,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(Customizer.withDefaults())
-                .authorizeHttpRequests(ar -> ar.requestMatchers("/" , "/oauth2login","home" , "/webjars/**" , "/h2-console/**").permitAll() )
+                .authorizeHttpRequests(ar -> ar.requestMatchers("/" , "/oauth2login","home" , "/webjars/**" ,"/css/**","/js/**" , "/h2-console/**").permitAll() )
                 .authorizeHttpRequests(ar -> ar.anyRequest().authenticated())
+                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .csrf(csrf-> csrf.ignoringRequestMatchers("/h2-console/**"))
                 .oauth2Login(al->
                         al.loginPage("/oauth2login")
                                 .defaultSuccessUrl("/" , true)
