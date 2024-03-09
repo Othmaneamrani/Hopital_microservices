@@ -1,0 +1,48 @@
+package micro.test.chambre.controller;
+
+import lombok.AllArgsConstructor;
+import micro.test.chambre.command.ChambreCommand;
+import micro.test.chambre.representation.ChambreRepresentation;
+import micro.test.chambre.service.IChambreService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/chambre")
+@AllArgsConstructor
+public class ChambreController {
+
+    private IChambreService iChambreService;
+
+    @PostMapping("/create")
+    public ChambreRepresentation createMedecin (@RequestBody ChambreCommand chambreCommand){
+        return iChambreService.createChambre(chambreCommand) ;
+    }
+
+    @GetMapping("/all")
+    public List<ChambreRepresentation> getAll(){
+        return iChambreService.getAllChambre();
+    }
+
+    @GetMapping("/{id}")
+    public ChambreRepresentation getById(@PathVariable int id){
+        return iChambreService.getChambreById(id);
+    }
+
+    @PutMapping("/update")
+    public ChambreRepresentation updateMedecin (@RequestBody ChambreCommand chambreCommand){
+        return iChambreService.updateChambre(chambreCommand) ;
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteMedecin (@PathVariable int id){
+        iChambreService.deleteChambre(id); ;
+    }
+
+    @GetMapping("/dispo/{id}")
+    public Boolean chambreDispo (@PathVariable int id){
+        return iChambreService.chambrePresente(id);
+    }
+
+}
