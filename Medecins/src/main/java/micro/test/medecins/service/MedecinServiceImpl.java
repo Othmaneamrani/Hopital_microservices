@@ -47,4 +47,7 @@ private MedecinMapper medecinMapper;
         List<Medecin> all = iMedecinRepository.findAll();
         return medecinMapper.convertListEntityToListRepresentation(all);
     }
+
+
+
 }

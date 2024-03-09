@@ -16,7 +16,7 @@ public class ChambreController {
     private IChambreService iChambreService;
 
     @PostMapping("/create")
-    public ChambreRepresentation createMedecin (@RequestBody ChambreCommand chambreCommand){
+    public ChambreRepresentation createChambre (@RequestBody ChambreCommand chambreCommand){
         return iChambreService.createChambre(chambreCommand) ;
     }
 
@@ -31,12 +31,12 @@ public class ChambreController {
     }
 
     @PutMapping("/update")
-    public ChambreRepresentation updateMedecin (@RequestBody ChambreCommand chambreCommand){
+    public ChambreRepresentation updateChambre (@RequestBody ChambreCommand chambreCommand){
         return iChambreService.updateChambre(chambreCommand) ;
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteMedecin (@PathVariable int id){
+    public void deleteChambre (@PathVariable int id){
         iChambreService.deleteChambre(id); ;
     }
 
