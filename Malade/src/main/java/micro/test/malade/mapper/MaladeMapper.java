@@ -26,6 +26,8 @@ public class MaladeMapper {
                     mapper.map(MaladeCommand::getPrenomCommand, Malade::setPrenom);
                     mapper.map(MaladeCommand::getEmailCommand, Malade::setEmail);
                     mapper.map(MaladeCommand::getUsernameCommand, Malade::setUsername);
+                    mapper.map(MaladeCommand::getChambreIdCommand, Malade::setChambreId);
+
                 });
         modelMapper.typeMap(Malade.class , MaladeRepresentation.class)
                 .addMappings(mapper -> {
@@ -34,6 +36,8 @@ public class MaladeMapper {
                     mapper.map(Malade::getPrenom, MaladeRepresentation::setPrenomRepresentation);
                     mapper.map(Malade::getEmail, MaladeRepresentation::setEmailRepresentation);
                     mapper.map(Malade::getUsername, MaladeRepresentation::setUsernameRepresentation);
+                    mapper.map(Malade::getChambreId, MaladeRepresentation::setChambreIdRepresentation);
+
                 });
     }
 

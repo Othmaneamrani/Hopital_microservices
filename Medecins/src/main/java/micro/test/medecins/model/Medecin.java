@@ -20,4 +20,6 @@ public class Medecin {
     private String prenom;
     private String email;
     private String username;
+    private int chambreId;
+
 }

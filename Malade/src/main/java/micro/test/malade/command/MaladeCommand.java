@@ -18,4 +18,6 @@ public class MaladeCommand {
     private String prenomCommand ;
     private String emailCommand ;
     private String usernameCommand ;
+    private int chambreIdCommand;
+
 }

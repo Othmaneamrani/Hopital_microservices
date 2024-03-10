@@ -20,4 +20,5 @@ public class Malade {
     private String prenom;
     private String email;
     private String username;
+    private int chambreId;
 }

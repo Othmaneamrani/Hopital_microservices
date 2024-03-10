@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.util.Date;
+
 @Setter
 @Getter
 @Builder
@@ -18,7 +20,13 @@ public class Rdv {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    
+    private Date date;
+
+    private int maladeId;
+    private int medecinId;
+    private int chambreId;
+
+
 
 
 }
