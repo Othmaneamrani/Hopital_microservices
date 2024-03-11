@@ -1,4 +1,4 @@
-package micro.test.chambre.config;
+package micro.test.diagno.config;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
