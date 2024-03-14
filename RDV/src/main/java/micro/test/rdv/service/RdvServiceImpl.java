@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -42,9 +43,10 @@ public class RdvServiceImpl implements IRdvService {
 
     @Override
     public RdvRepresentation getRdvById (int id) {
-        Rdv rdv = iRdvRepository.findById(id).get();
-        return rdvMapper.convertEntityToRepresentation(rdv);
+        Optional<Rdv> rdv = iRdvRepository.findById(id);
+        return rdvMapper.convertEntityToRepresentation(rdv.orElseThrow(()-> new RuntimeException("Rdv inéxistant.")));
     }
+
 
     @Override
     public void deleteRdv (int id) {
