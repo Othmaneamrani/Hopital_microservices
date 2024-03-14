@@ -49,4 +49,18 @@ public class RdvServiceImpl implements IRdvService {
     }
 
 
+    @Override
+    public List<RdvRepresentation> findRdvByMedecinId(int id) {
+        List<Rdv> rdvs = iRdvRepository.findByMedecinId(id);
+        return rdvMapper.convertListEntityToListRepresentation(rdvs);
+    }
+
+    @Override
+    public List<RdvRepresentation> findRdvByMaladeId(int id) {
+        List<Rdv> rdvs = iRdvRepository.findByMaladeId(id);
+        return rdvMapper.convertListEntityToListRepresentation(rdvs);
+    }
+
+
+
 }

@@ -40,4 +40,18 @@ public class RdvController {
         iRdvService.deleteRdv(id); ;
     }
 
+
+    @GetMapping("/medecin/{id}")
+    public List<RdvRepresentation> findRdvByMedecinId (@PathVariable int id){
+        return iRdvService.findRdvByMedecinId(id) ;
+    }
+
+
+    @GetMapping("/malade/{id}")
+    public List<RdvRepresentation> findRdvByMaladeId (@PathVariable int id){
+        return iRdvService.findRdvByMaladeId(id) ;
+    }
+
+
+
 }

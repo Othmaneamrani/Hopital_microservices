@@ -14,4 +14,7 @@ public interface IRdvService {
     public void deleteRdv (int id);
     public List<RdvRepresentation> getAllRdv ();
 
+    public List<RdvRepresentation> findRdvByMedecinId (int id);
+    public List<RdvRepresentation> findRdvByMaladeId (int id);
+
 }

@@ -47,4 +47,17 @@ public class DiagnoServiceImpl implements IDiagnoService {
             List<Diagno> all = iDiagnoRepository.findAll();
             return diagnoMapper.convertListEntityToListRepresentation(all);
         }
+
+    @Override
+    public List<DiagnoRepresentation> findDiagnoByMedecinId(int id) {
+        List<Diagno> diagnos = iDiagnoRepository.findByMedecinId(id);
+        return diagnoMapper.convertListEntityToListRepresentation(diagnos);
+    }
+
+    @Override
+    public List<DiagnoRepresentation> findDiagnoByMaladeId(int id) {
+        List<Diagno> diagnos = iDiagnoRepository.findByMaladeId(id);
+        return diagnoMapper.convertListEntityToListRepresentation(diagnos);
+    }
+
 }

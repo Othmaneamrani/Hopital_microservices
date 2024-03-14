@@ -13,5 +13,8 @@ public interface IDiagnoService {
     public DiagnoRepresentation getDiagnoById (int id);
     public void deleteDiagno (int id);
     public List<DiagnoRepresentation> getAllDiagno ();
+    public List<DiagnoRepresentation> findDiagnoByMedecinId (int id);
+    public List<DiagnoRepresentation> findDiagnoByMaladeId (int id);
+
 
 }

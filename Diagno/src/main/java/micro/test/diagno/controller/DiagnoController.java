@@ -40,4 +40,16 @@ public class DiagnoController {
         iDiagnoService.deleteDiagno(id); ;
     }
 
+    @GetMapping("/medecin/{id}")
+    public List<DiagnoRepresentation> findDiagnoByMedecinId (@PathVariable int id){
+        return iDiagnoService.findDiagnoByMedecinId(id) ;
+    }
+
+
+    @GetMapping("/malade/{id}")
+    public List<DiagnoRepresentation> findDiagnoByMaladeId (@PathVariable int id){
+        return iDiagnoService.findDiagnoByMaladeId(id) ;
+    }
+
+
 }
