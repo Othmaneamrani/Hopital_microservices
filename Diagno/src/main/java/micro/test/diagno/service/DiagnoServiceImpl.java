@@ -1,5 +1,6 @@
 package micro.test.diagno.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import micro.test.diagno.command.DiagnoCommand;
 import micro.test.diagno.mapper.DiagnoMapper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class DiagnoServiceImpl implements IDiagnoService {
 

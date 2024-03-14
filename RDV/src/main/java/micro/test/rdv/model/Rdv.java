@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -20,13 +20,11 @@ public class Rdv {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private Date date;
+    private LocalDateTime date;
 
     private int maladeId;
     private int medecinId;
     private int chambreId;
-
-
 
 
 }

@@ -1,5 +1,6 @@
 package micro.test.rdv.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import micro.test.rdv.command.RdvCommand;
 import micro.test.rdv.mapper.RdvMapper;
@@ -8,9 +9,11 @@ import micro.test.rdv.repository.IRdvRepository;
 import micro.test.rdv.representation.RdvRepresentation;
 import org.springframework.stereotype.Service;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class RdvServiceImpl implements IRdvService {
 
@@ -19,6 +22,13 @@ public class RdvServiceImpl implements IRdvService {
     @Override
     public RdvRepresentation createRdv (RdvCommand rdvCommand) {
         Rdv rdv = rdvMapper.convertCommandToEntity(rdvCommand);
+        List<Rdv> all = iRdvRepository.findAll();
+        for(Rdv r : all){
+            long between = ChronoUnit.MINUTES.between(r.getDate(), rdv.getDate());
+            if (rdv.getMedecinId() == r.getMedecinId() && (rdv.getDate().isEqual(r.getDate()) || between <=15 ) )  {
+                throw new RuntimeException("Date déjà réservée.");
+            }
+        }
         iRdvRepository.save(rdv);
         return rdvMapper.convertEntityToRepresentation(rdv);
     }

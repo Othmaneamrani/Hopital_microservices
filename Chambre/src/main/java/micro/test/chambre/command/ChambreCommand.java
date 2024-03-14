@@ -12,6 +12,7 @@ public class ChambreCommand {
     private int etageCommand;
     private int tailleCommand;
     private int capaciteCommand;
+    private int utiliseCommand;
     private Boolean dispoCommand;
 
 }

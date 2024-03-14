@@ -25,6 +25,7 @@ public class ChambreMapper {
                     mapper.map(ChambreCommand::getEtageCommand , Chambre::setEtage);
                     mapper.map(ChambreCommand::getTailleCommand , Chambre::setTaille);
                     mapper.map(ChambreCommand::getCapaciteCommand , Chambre::setCapacite);
+                    mapper.map(ChambreCommand::getUtiliseCommand , Chambre::setUtilise);
                     mapper.map(ChambreCommand::getDispoCommand , Chambre::setDispo);
                         });
 
@@ -34,6 +35,7 @@ public class ChambreMapper {
                     mapper.map(Chambre::getEtage , ChambreRepresentation::setEtageRepresentation);
                     mapper.map(Chambre::getTaille , ChambreRepresentation::setTailleRepresentation);
                     mapper.map(Chambre::getCapacite , ChambreRepresentation::setCapaciteRepresentation);
+                    mapper.map(Chambre::getUtilise , ChambreRepresentation::setUtiliseRepresentation);
                     mapper.map(Chambre::getDispo , ChambreRepresentation::setDispoRepresentation);
                 });
     }

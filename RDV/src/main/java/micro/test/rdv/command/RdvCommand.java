@@ -2,7 +2,7 @@ package micro.test.rdv.command;
 
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 @Setter
 @Getter
 @Builder
@@ -11,7 +11,7 @@ import java.util.Date;
 public class RdvCommand {
     private int idCommand;
 
-    private Date dateCommand;
+    private LocalDateTime dateCommand;
 
     private int maladeIdCommand;
     private int medecinIdCommand;

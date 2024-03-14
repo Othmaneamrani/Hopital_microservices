@@ -1,5 +1,6 @@
 package micro.test.medecins.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import micro.test.medecins.command.MedecinCommand;
 import micro.test.medecins.mapper.MedecinMapper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class MedecinServiceImpl implements IMedecinService{
 

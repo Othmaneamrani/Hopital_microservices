@@ -45,4 +45,15 @@ public class ChambreController {
         return iChambreService.chambrePresente(id);
     }
 
+
+    @PatchMapping("/remove/{id}")
+    public ChambreRepresentation removeFromChambre(@PathVariable int id){
+        return iChambreService.removeFromChambre(id);
+    }
+
+    @PatchMapping("/insert/{id}")
+    public ChambreRepresentation insertIntoChambre(@PathVariable int id){
+        return iChambreService.insertIntoChambre(id);
+    }
+
 }

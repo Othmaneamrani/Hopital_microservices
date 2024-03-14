@@ -1,5 +1,6 @@
 package micro.test.malade.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import micro.test.malade.command.MaladeCommand;
 import micro.test.malade.mapper.MaladeMapper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class MaladeServiceImpl implements IMaladeService {
 
@@ -46,6 +48,11 @@ public class MaladeServiceImpl implements IMaladeService {
     public List<MaladeRepresentation> getAllMalade () {
         List<Malade> all = iMaladeRepository.findAll();
         return maladeMapper.convertListEntityToListRepresentation(all);
+    }
+
+    @Override
+    public List<MaladeRepresentation> getMaladeByChambreId(int id) {
+        return maladeMapper.convertListEntityToListRepresentation(iMaladeRepository.getMaladeByChambreId(id));
     }
 
 

@@ -1,5 +1,6 @@
 package micro.test.chambre.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import micro.test.chambre.command.ChambreCommand;
 import micro.test.chambre.mapper.ChambreMapper;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class ChambreServiceImpl implements IChambreService {
 
@@ -20,6 +22,7 @@ public class ChambreServiceImpl implements IChambreService {
     @Override
     public ChambreRepresentation createChambre (ChambreCommand chambreCommand  ) {
         Chambre chambre = chambreMapper.convertCommandToEntity(chambreCommand);
+        chambre.setDispo(chambre.getCapacite() != chambre.getUtilise());
         iChambreRepository.save(chambre);
         return chambreMapper.convertEntityToRepresentation(chambre);
     }
@@ -27,6 +30,7 @@ public class ChambreServiceImpl implements IChambreService {
     @Override
     public ChambreRepresentation updateChambre  (ChambreCommand chambreCommand ) {
         Chambre chambre = chambreMapper.convertCommandToEntity(chambreCommand);
+        chambre.setDispo(chambre.getCapacite() != chambre.getUtilise());
         iChambreRepository.save(chambre);
         return chambreMapper.convertEntityToRepresentation(chambre);
     }
@@ -52,7 +56,34 @@ public class ChambreServiceImpl implements IChambreService {
     @Override
     public Boolean chambrePresente(int id) {
         Chambre chambre = iChambreRepository.findById(id).get();
-        Boolean result = chambre.getDispo();
-        return result;
+        return chambre.getDispo();
     }
+
+    @Override
+    public ChambreRepresentation removeFromChambre(int id) {
+        Chambre chambre = iChambreRepository.findById(id).get();
+        if(chambre.getUtilise() > 0) {
+            chambre.setUtilise(chambre.getUtilise() - 1);
+        }else{
+            throw new RuntimeException("Chambre vide.");
+        }
+        chambre.setDispo(chambre.getCapacite() != chambre.getUtilise());
+        iChambreRepository.save(chambre);
+        return chambreMapper.convertEntityToRepresentation(chambre);
+    }
+
+    @Override
+    public ChambreRepresentation insertIntoChambre(int id) {
+        Chambre chambre = iChambreRepository.findById(id).get();
+        if(chambre.getDispo()) {
+            chambre.setUtilise(chambre.getUtilise() + 1);
+            chambre.setDispo(chambre.getCapacite() != chambre.getUtilise());
+            iChambreRepository.save(chambre);
+        }else{
+            throw new RuntimeException("Chambre non disponible.");
+        }
+        return chambreMapper.convertEntityToRepresentation(chambre);
+    }
+
+
 }

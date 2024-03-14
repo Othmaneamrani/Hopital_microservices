@@ -2,7 +2,7 @@ package micro.test.rdv.representation;
 
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -12,7 +12,7 @@ import java.util.Date;
 public class RdvRepresentation {
     private int idRepresentation;
 
-    private Date dateRepresentation;
+    private LocalDateTime dateRepresentation;
 
     private int maladeIdRepresentation;
     private int medecinIdRepresentation;

@@ -19,6 +19,7 @@ public class Chambre {
     private int etage;
     private int taille;
     private int capacite;
+    private int utilise;
     private Boolean dispo;
 
 }
