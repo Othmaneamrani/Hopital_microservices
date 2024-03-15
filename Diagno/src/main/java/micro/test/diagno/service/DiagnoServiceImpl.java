@@ -3,12 +3,17 @@ package micro.test.diagno.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import micro.test.diagno.command.DiagnoCommand;
+
 import micro.test.diagno.mapper.DiagnoMapper;
 import micro.test.diagno.model.Diagno;
 import micro.test.diagno.repository.IDiagnoRepository;
 import micro.test.diagno.representation.DiagnoRepresentation;
+import micro.test.diagno.representation.MaladeRepresentation;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,6 +23,7 @@ public class DiagnoServiceImpl implements IDiagnoService {
 
     private IDiagnoRepository iDiagnoRepository ;
     private DiagnoMapper diagnoMapper ;
+//    private WebClient.Builder webClientBuilder;
 
     @Override
     public DiagnoRepresentation createDiagno(DiagnoCommand diagnoCommand) {
@@ -61,5 +67,38 @@ public class DiagnoServiceImpl implements IDiagnoService {
         List<Diagno> diagnos = iDiagnoRepository.findByMaladeId(id);
         return diagnoMapper.convertListEntityToListRepresentation(diagnos);
     }
+
+    @Override
+    public List<MaladeRepresentation> findMaladeByIdMedecin(int id) {
+        List<Diagno> diagnos = iDiagnoRepository.findByMedecinId(id);
+        List<MaladeRepresentation> malades = new ArrayList<>();
+        for (Diagno d : diagnos){
+            RestClient restClient = RestClient.create("http://localhost:8081");
+            MaladeRepresentation malade = restClient.get()
+                    .uri("/malade/" + d.getMaladeId())
+                    .retrieve()
+                    .body(MaladeRepresentation.class);
+            malades.add(malade);
+        }
+        return malades;
+    }
+
+
+
+//    @Override
+//    public List<MaladeRepresentation> findMaladeByIdMedecin(int id) {
+//        List<Diagno> diagnos = iDiagnoRepository.findByMedecinId(id);
+//        List<MaladeRepresentation> malades = new ArrayList<>();
+//
+//        for (Diagno d : diagnos){
+//            MaladeRepresentation malade = webClientBuilder.build().get()
+//                    .uri("http://malade/{malaId}", d.getMaladeId())
+//                    .retrieve()
+//                    .bodyToMono(MaladeRepresentation.class)
+//                    .block();
+//            malades.add(malade);
+//        }
+//        return malades;
+//    }
 
 }

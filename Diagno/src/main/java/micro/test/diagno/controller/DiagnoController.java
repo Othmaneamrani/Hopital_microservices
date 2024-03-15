@@ -3,6 +3,7 @@ package micro.test.diagno.controller;
 import lombok.AllArgsConstructor;
 import micro.test.diagno.command.DiagnoCommand;
 import micro.test.diagno.representation.DiagnoRepresentation;
+import micro.test.diagno.representation.MaladeRepresentation;
 import micro.test.diagno.service.IDiagnoService;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +50,12 @@ public class DiagnoController {
     @GetMapping("/malade/{id}")
     public List<DiagnoRepresentation> findDiagnoByMaladeId (@PathVariable int id){
         return iDiagnoService.findDiagnoByMaladeId(id) ;
+    }
+
+
+    @GetMapping("/malades/{id}")
+    public List<MaladeRepresentation> findMaladeByIdMedecin(@PathVariable int id) {
+    return iDiagnoService.findMaladeByIdMedecin(id);
     }
 
 
