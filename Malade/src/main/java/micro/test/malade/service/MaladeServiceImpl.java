@@ -50,10 +50,12 @@ public class MaladeServiceImpl implements IMaladeService {
         return maladeMapper.convertListEntityToListRepresentation(all);
     }
 
-    @Override
-    public List<MaladeRepresentation> getMaladeByChambreId(int id) {
-        return maladeMapper.convertListEntityToListRepresentation(iMaladeRepository.getMaladeByChambreId(id));
-    }
 
+    @Override
+    public MaladeRepresentation setChambre(int idChambre, int idMalade) {
+        Malade malade = iMaladeRepository.getById(idMalade);
+        malade.setChambreId(idChambre);
+        iMaladeRepository.save(malade);
+        return maladeMapper.convertEntityToRepresentation(malade);    }
 
 }

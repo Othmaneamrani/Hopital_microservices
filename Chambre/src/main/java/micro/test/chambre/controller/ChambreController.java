@@ -46,14 +46,14 @@ public class ChambreController {
     }
 
 
-    @PatchMapping("/remove/{id}")
-    public ChambreRepresentation removeFromChambre(@PathVariable int id){
-        return iChambreService.removeFromChambre(id);
+    @GetMapping("/remove")
+    public ChambreRepresentation removeFromChambre(@RequestParam int idChambre , @RequestParam int idMalade){
+        return iChambreService.removeFromChambre(idChambre , idMalade);
     }
 
-    @PatchMapping("/insert/{id}")
-    public ChambreRepresentation insertIntoChambre(@PathVariable int id){
-        return iChambreService.insertIntoChambre(id);
+    @GetMapping("/insert")
+    public ChambreRepresentation insertIntoChambre(@RequestParam int idChambre , @RequestParam int idMalade){
+        return iChambreService.insertIntoChambre(idChambre , idMalade);
     }
 
 }

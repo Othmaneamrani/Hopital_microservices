@@ -15,7 +15,7 @@ public interface IChambreService {
     public List<ChambreRepresentation> getAllChambre ();
     public Boolean chambrePresente(int id);
 
-    public ChambreRepresentation removeFromChambre(int id);
-    public ChambreRepresentation insertIntoChambre(int id);
+    public ChambreRepresentation removeFromChambre(int idChambre , int idMalade);
+    public ChambreRepresentation insertIntoChambre(int idChambre , int idMalade);
 
 }

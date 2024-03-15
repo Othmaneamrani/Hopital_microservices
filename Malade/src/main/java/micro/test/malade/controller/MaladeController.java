@@ -40,10 +40,11 @@ public class MaladeController {
         iMaladeService.deleteMalade(id); ;
     }
 
-    @GetMapping("/inchambre/{id}")
-    public List<MaladeRepresentation> getMaladeByChambreId(@PathVariable int id){
-        return iMaladeService.getMaladeByChambreId(id);
+    @GetMapping("/setchambre")
+    public MaladeRepresentation setChambre(@RequestParam int idChambre , @RequestParam int idMalade){
+        return iMaladeService.setChambre(idChambre,idMalade);
     }
+
 
 
 }

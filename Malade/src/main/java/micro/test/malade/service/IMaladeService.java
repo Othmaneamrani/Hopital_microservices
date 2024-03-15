@@ -14,8 +14,7 @@ public interface IMaladeService {
     public void deleteMalade (int id);
     public List<MaladeRepresentation> getAllMalade ();
 
-    List<MaladeRepresentation> getMaladeByChambreId (int id);
-
+    MaladeRepresentation setChambre (int idChambre , int idMalade);
 
 
 }

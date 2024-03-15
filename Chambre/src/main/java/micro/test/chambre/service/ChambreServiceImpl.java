@@ -7,7 +7,9 @@ import micro.test.chambre.mapper.ChambreMapper;
 import micro.test.chambre.model.Chambre;
 import micro.test.chambre.repository.IChambreRepository;
 import micro.test.chambre.representation.ChambreRepresentation;
+import micro.test.chambre.representation.MaladeRepresentation;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,24 +62,38 @@ public class ChambreServiceImpl implements IChambreService {
     }
 
     @Override
-    public ChambreRepresentation removeFromChambre(int id) {
-        Chambre chambre = iChambreRepository.findById(id).get();
+    public ChambreRepresentation removeFromChambre(int idChambre , int idMalade) {
+        Chambre chambre = iChambreRepository.findById(idChambre).get();
         if(chambre.getUtilise() > 0) {
             chambre.setUtilise(chambre.getUtilise() - 1);
         }else{
             throw new RuntimeException("Chambre vide.");
         }
         chambre.setDispo(chambre.getCapacite() != chambre.getUtilise());
+
+        RestClient restClient = RestClient.create("http://localhost:8081/malade");
+        restClient.get()
+                .uri("/setchambre?idChambre="+idChambre +"&idMalade="+idMalade)
+                .retrieve()
+                .body(MaladeRepresentation.class);
+
         iChambreRepository.save(chambre);
         return chambreMapper.convertEntityToRepresentation(chambre);
     }
 
     @Override
-    public ChambreRepresentation insertIntoChambre(int id) {
-        Chambre chambre = iChambreRepository.findById(id).get();
+    public ChambreRepresentation insertIntoChambre(int idChambre , int idMalade) {
+        Chambre chambre = iChambreRepository.findById(idChambre).get();
         if(chambre.getDispo()) {
             chambre.setUtilise(chambre.getUtilise() + 1);
             chambre.setDispo(chambre.getCapacite() != chambre.getUtilise());
+
+            RestClient restClient = RestClient.create("http://localhost:8081/malade");
+            restClient.get()
+                    .uri("/setchambre?idChambre="+idChambre +"&idMalade="+idMalade)
+                    .retrieve()
+                    .body(MaladeRepresentation.class);
+
             iChambreRepository.save(chambre);
         }else{
             throw new RuntimeException("Chambre non disponible.");
