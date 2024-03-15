@@ -10,6 +10,7 @@ import micro.test.chambre.representation.ChambreRepresentation;
 import micro.test.chambre.representation.MaladeRepresentation;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,7 @@ public class ChambreServiceImpl implements IChambreService {
 
     private IChambreRepository iChambreRepository;
     private ChambreMapper chambreMapper;
+    private WebClient.Builder webClientBuilder;
     @Override
     public ChambreRepresentation createChambre (ChambreCommand chambreCommand  ) {
         Chambre chambre = chambreMapper.convertCommandToEntity(chambreCommand);
@@ -71,11 +73,23 @@ public class ChambreServiceImpl implements IChambreService {
         }
         chambre.setDispo(chambre.getCapacite() != chambre.getUtilise());
 
-        RestClient restClient = RestClient.create("http://localhost:8081/malade");
-        restClient.get()
-                .uri("/setchambre?idChambre="+idChambre +"&idMalade="+idMalade)
-                .retrieve()
-                .body(MaladeRepresentation.class);
+//        RestClient restClient = RestClient.create("http://localhost:8081/malade");
+//        restClient.get()
+//                .uri("/setchambre?idChambre="+idChambre +"&idMalade="+idMalade)
+//                .retrieve()
+//                .body(MaladeRepresentation.class);
+
+        webClientBuilder.build().get()
+                        .uri("http://localhost:8081/malade/setchambre?idChambre=" + 0 +"&idMalade=" + idMalade)
+                                .retrieve()
+                                .bodyToMono(MaladeRepresentation.class)
+                                .subscribe(
+                                    maladeRepresentation -> {
+                                        System.out.println("Réponse reçue : " + maladeRepresentation.getChambreIdRepresentation());
+                                    },
+                                    error -> {
+                                        System.err.println("Une erreur s'est produite lors de la requête WebClient : " + error.getMessage());
+                                });
 
         iChambreRepository.save(chambre);
         return chambreMapper.convertEntityToRepresentation(chambre);
@@ -88,15 +102,27 @@ public class ChambreServiceImpl implements IChambreService {
             chambre.setUtilise(chambre.getUtilise() + 1);
             chambre.setDispo(chambre.getCapacite() != chambre.getUtilise());
 
-            RestClient restClient = RestClient.create("http://localhost:8081/malade");
-            restClient.get()
-                    .uri("/setchambre?idChambre="+idChambre +"&idMalade="+idMalade)
+//            RestClient restClient = RestClient.create("http://localhost:8081/malade");
+//            restClient.get()
+//                    .uri("/setchambre?idChambre="+idChambre +"&idMalade="+idMalade)
+//                    .retrieve()
+//                    .body(MaladeRepresentation.class);
+
+            webClientBuilder.build().get()
+                    .uri("http://localhost:8081/malade/setchambre?idChambre=" + idChambre +"&idMalade=" + idMalade)
                     .retrieve()
-                    .body(MaladeRepresentation.class);
+                    .bodyToMono(MaladeRepresentation.class)
+                    .subscribe( // Abonnement à la réponse
+                            maladeRepresentation -> {
+                                System.out.println("Réponse reçue : " + maladeRepresentation.getChambreIdRepresentation());
+                            },
+                            error -> {
+                                System.err.println("Une erreur s'est produite lors de la requête WebClient : " + error.getMessage());
+                            });
 
             iChambreRepository.save(chambre);
         }else{
-            throw new RuntimeException("Chambre non disponible.");
+            throw new RuntimeException("Chambre pleine.");
         }
         return chambreMapper.convertEntityToRepresentation(chambre);
     }

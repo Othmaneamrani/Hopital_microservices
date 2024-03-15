@@ -4,6 +4,7 @@ import micro.test.diagno.command.DiagnoCommand;
 
 import micro.test.diagno.representation.DiagnoRepresentation;
 import micro.test.diagno.representation.MaladeRepresentation;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface IDiagnoService {
     public List<DiagnoRepresentation> getAllDiagno ();
     public List<DiagnoRepresentation> findDiagnoByMedecinId (int id);
     public List<DiagnoRepresentation> findDiagnoByMaladeId (int id);
-    public List<MaladeRepresentation> findMaladeByIdMedecin(int id) ;
+    public Flux<MaladeRepresentation> findMaladeByIdMedecin(int id) ;
 
 
 }

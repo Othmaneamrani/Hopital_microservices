@@ -6,6 +6,7 @@ import micro.test.diagno.representation.DiagnoRepresentation;
 import micro.test.diagno.representation.MaladeRepresentation;
 import micro.test.diagno.service.IDiagnoService;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class DiagnoController {
 
 
     @GetMapping("/malades/{id}")
-    public List<MaladeRepresentation> findMaladeByIdMedecin(@PathVariable int id) {
+    public Flux<MaladeRepresentation> findMaladeByIdMedecin(@PathVariable int id) {
     return iDiagnoService.findMaladeByIdMedecin(id);
     }
 

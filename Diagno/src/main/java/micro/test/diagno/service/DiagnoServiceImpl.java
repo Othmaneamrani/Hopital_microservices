@@ -12,6 +12,7 @@ import micro.test.diagno.representation.MaladeRepresentation;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class DiagnoServiceImpl implements IDiagnoService {
 
     private IDiagnoRepository iDiagnoRepository ;
     private DiagnoMapper diagnoMapper ;
-//    private WebClient.Builder webClientBuilder;
+    private WebClient.Builder webClientBuilder;
 
     @Override
     public DiagnoRepresentation createDiagno(DiagnoCommand diagnoCommand) {
@@ -68,37 +69,30 @@ public class DiagnoServiceImpl implements IDiagnoService {
         return diagnoMapper.convertListEntityToListRepresentation(diagnos);
     }
 
-    @Override
-    public List<MaladeRepresentation> findMaladeByIdMedecin(int id) {
-        List<Diagno> diagnos = iDiagnoRepository.findByMedecinId(id);
-        List<MaladeRepresentation> malades = new ArrayList<>();
-        for (Diagno d : diagnos){
-            RestClient restClient = RestClient.create("http://localhost:8081");
-            MaladeRepresentation malade = restClient.get()
-                    .uri("/malade/" + d.getMaladeId())
-                    .retrieve()
-                    .body(MaladeRepresentation.class);
-            malades.add(malade);
-        }
-        return malades;
-    }
-
-
-
 //    @Override
 //    public List<MaladeRepresentation> findMaladeByIdMedecin(int id) {
 //        List<Diagno> diagnos = iDiagnoRepository.findByMedecinId(id);
 //        List<MaladeRepresentation> malades = new ArrayList<>();
-//
 //        for (Diagno d : diagnos){
-//            MaladeRepresentation malade = webClientBuilder.build().get()
-//                    .uri("http://malade/{malaId}", d.getMaladeId())
+//            RestClient restClient = RestClient.create("http://localhost:8081");
+//            MaladeRepresentation malade = restClient.get()
+//                    .uri("/malade/" + d.getMaladeId())
 //                    .retrieve()
-//                    .bodyToMono(MaladeRepresentation.class)
-//                    .block();
+//                    .body(MaladeRepresentation.class);
 //            malades.add(malade);
 //        }
 //        return malades;
 //    }
+
+
+
+    @Override
+    public Flux<MaladeRepresentation> findMaladeByIdMedecin(int id) {
+        return Flux.fromIterable(iDiagnoRepository.findByMedecinId(id))
+                .flatMapSequential(diagno -> webClientBuilder.build().get()
+                        .uri("http://localhost:8081/malade/" + diagno.getMaladeId())
+                        .retrieve()
+                        .bodyToMono(MaladeRepresentation.class));
+    }
 
 }
