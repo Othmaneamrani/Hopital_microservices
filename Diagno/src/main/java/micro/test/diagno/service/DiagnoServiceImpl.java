@@ -86,13 +86,26 @@ public class DiagnoServiceImpl implements IDiagnoService {
 
 
 
+//    @Override
+//    public Flux<MaladeRepresentation> findMaladeByIdMedecin(int id) {
+//        return Flux.fromIterable(iDiagnoRepository.findByMedecinId(id))
+//                .flatMapSequential(diagno -> webClientBuilder.build().get()
+//                        .uri("http://localhost:8081/malade/" + diagno.getMaladeId())
+//                        .retrieve()
+//                        .bodyToMono(MaladeRepresentation.class));
+//    }
+
     @Override
     public Flux<MaladeRepresentation> findMaladeByIdMedecin(int id) {
-        return Flux.fromIterable(iDiagnoRepository.findByMedecinId(id))
-                .flatMapSequential(diagno -> webClientBuilder.build().get()
-                        .uri("http://localhost:8081/malade/" + diagno.getMaladeId())
+        List<Diagno> byMedecinId = iDiagnoRepository.findByMedecinId(id);
+        List<Integer> list = byMedecinId.stream().map(d -> d.getMaladeId()).toList();
+        return Flux.fromIterable(list)
+                .flatMapSequential(m-> webClientBuilder.build().get()
+                        .uri("http://localhost:8081/malade",
+                                uriBuilder -> uriBuilder.queryParam("ids",m).build())
                         .retrieve()
-                        .bodyToMono(MaladeRepresentation.class));
+                        .bodyToFlux(MaladeRepresentation.class));
     }
+
 
 }

@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface IMaladeRepository extends JpaRepository<Malade , Integer> {
     Malade getMaladeByChambreIdAndId (int chamreId , int id);
-
 }

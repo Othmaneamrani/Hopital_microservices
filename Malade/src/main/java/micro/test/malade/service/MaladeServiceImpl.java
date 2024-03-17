@@ -58,4 +58,14 @@ public class MaladeServiceImpl implements IMaladeService {
         iMaladeRepository.save(malade);
         return maladeMapper.convertEntityToRepresentation(malade);    }
 
+    @Override
+    public List<MaladeRepresentation> getByIds(List<Integer> ids){
+        List<Malade> allById = iMaladeRepository.findAllById(ids);
+        return maladeMapper.convertListEntityToListRepresentation(allById);
+    }
+
+
+
 }
+
+

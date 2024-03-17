@@ -46,5 +46,10 @@ public class MaladeController {
     }
 
 
+    @GetMapping
+    public List<MaladeRepresentation> getByIds(@RequestParam List<Integer> ids){
+        return iMaladeService.getByIds(ids);
+    }
+
 
 }

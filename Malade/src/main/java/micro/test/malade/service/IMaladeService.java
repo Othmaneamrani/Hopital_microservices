@@ -16,5 +16,5 @@ public interface IMaladeService {
 
     MaladeRepresentation setChambre (int idChambre , int idMalade);
 
-
+    public List<MaladeRepresentation> getByIds(List<Integer> ids);
 }
