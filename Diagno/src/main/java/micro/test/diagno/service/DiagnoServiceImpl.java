@@ -1,5 +1,7 @@
 package micro.test.diagno.service;
 
+import brave.Span;
+import brave.Tracer;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import micro.test.diagno.command.DiagnoCommand;
@@ -25,12 +27,19 @@ public class DiagnoServiceImpl implements IDiagnoService {
     private IDiagnoRepository iDiagnoRepository ;
     private DiagnoMapper diagnoMapper ;
     private WebClient.Builder webClientBuilder;
+    private Tracer tracer;
 
     @Override
     public DiagnoRepresentation createDiagno(DiagnoCommand diagnoCommand) {
-        Diagno diagno = diagnoMapper.convertCommandToEntity(diagnoCommand);
-        iDiagnoRepository.save(diagno);
-        return diagnoMapper.convertEntityToRepresentation(diagno);
+        Span diagnoCreate = tracer.nextSpan().name("diagnoCreate");
+        try(Tracer.SpanInScope spanInScope = tracer.withSpanInScope(diagnoCreate.start()) ){
+            Diagno diagno = diagnoMapper.convertCommandToEntity(diagnoCommand);
+            iDiagnoRepository.save(diagno);
+            return diagnoMapper.convertEntityToRepresentation(diagno);
+        }finally {
+            diagnoCreate.finish();
+        }
+
     }
     @Override
     public DiagnoRepresentation updateDiagno(DiagnoCommand diagnoCommand) {
