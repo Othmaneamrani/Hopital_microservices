@@ -12,6 +12,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -86,7 +88,12 @@ public class ChambreServiceImpl implements IChambreService {
                                 });
 
         iChambreRepository.save(chambre);
-        kafkaTemplate.send("notifTopic","chambre -- malade N°"+idMalade);
+        LocalDateTime now = LocalDateTime.now();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        String formattedDateTime = now.format(formatter);
+        kafkaTemplate.send("notifTopic","Le "+ formattedDateTime + " chambre -- malade N° "+idMalade );
+
         return chambreMapper.convertEntityToRepresentation(chambre);
     }
 
@@ -110,7 +117,11 @@ public class ChambreServiceImpl implements IChambreService {
                             });
 
             iChambreRepository.save(chambre);
-            kafkaTemplate.send("notifTopic","chambre ++ malade N°"+idMalade);
+            LocalDateTime now = LocalDateTime.now();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            String formattedDateTime = now.format(formatter);
+            kafkaTemplate.send("notifTopic","Le "+ formattedDateTime + " chambre ++ malade N° "+idMalade );
 
         }else{
             throw new RuntimeException("Chambre pleine.");
