@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.kafka.annotation.KafkaListener;
 
+
 @SpringBootApplication
 @EnableDiscoveryClient
 @Slf4j
