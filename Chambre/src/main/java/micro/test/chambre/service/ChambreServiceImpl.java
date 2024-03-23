@@ -8,12 +8,11 @@ import micro.test.chambre.model.Chambre;
 import micro.test.chambre.repository.IChambreRepository;
 import micro.test.chambre.representation.ChambreRepresentation;
 import micro.test.chambre.representation.MaladeRepresentation;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -23,6 +22,7 @@ public class ChambreServiceImpl implements IChambreService {
     private IChambreRepository iChambreRepository;
     private ChambreMapper chambreMapper;
     private WebClient.Builder webClientBuilder;
+    private KafkaTemplate<String,String> kafkaTemplate;
     @Override
     public ChambreRepresentation createChambre (ChambreCommand chambreCommand  ) {
         Chambre chambre = chambreMapper.convertCommandToEntity(chambreCommand);
@@ -73,12 +73,6 @@ public class ChambreServiceImpl implements IChambreService {
         }
         chambre.setDispo(chambre.getCapacite() != chambre.getUtilise());
 
-//        RestClient restClient = RestClient.create("http://localhost:8081/malade");
-//        restClient.get()
-//                .uri("/setchambre?idChambre="+idChambre +"&idMalade="+idMalade)
-//                .retrieve()
-//                .body(MaladeRepresentation.class);
-
         webClientBuilder.build().get()
                         .uri("http://localhost:8081/malade/setchambre?idChambre=" + 0 +"&idMalade=" + idMalade)
                                 .retrieve()
@@ -92,6 +86,7 @@ public class ChambreServiceImpl implements IChambreService {
                                 });
 
         iChambreRepository.save(chambre);
+        kafkaTemplate.send("notifTopic","chambre -- malade N°"+idMalade);
         return chambreMapper.convertEntityToRepresentation(chambre);
     }
 
@@ -101,12 +96,6 @@ public class ChambreServiceImpl implements IChambreService {
         if(chambre.getDispo()) {
             chambre.setUtilise(chambre.getUtilise() + 1);
             chambre.setDispo(chambre.getCapacite() != chambre.getUtilise());
-
-//            RestClient restClient = RestClient.create("http://localhost:8081/malade");
-//            restClient.get()
-//                    .uri("/setchambre?idChambre="+idChambre +"&idMalade="+idMalade)
-//                    .retrieve()
-//                    .body(MaladeRepresentation.class);
 
             webClientBuilder.build().get()
                     .uri("http://localhost:8081/malade/setchambre?idChambre=" + idChambre +"&idMalade=" + idMalade)
@@ -121,6 +110,8 @@ public class ChambreServiceImpl implements IChambreService {
                             });
 
             iChambreRepository.save(chambre);
+            kafkaTemplate.send("notifTopic","chambre ++ malade N°"+idMalade);
+
         }else{
             throw new RuntimeException("Chambre pleine.");
         }
