@@ -3,6 +3,7 @@ package micro.test.chambre.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import micro.test.chambre.command.ChambreCommand;
+import micro.test.chambre.kafka.Notif;
 import micro.test.chambre.mapper.ChambreMapper;
 import micro.test.chambre.model.Chambre;
 import micro.test.chambre.repository.IChambreRepository;
@@ -11,6 +12,7 @@ import micro.test.chambre.representation.MaladeRepresentation;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.cloud.stream.function.StreamBridge;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +27,7 @@ public class ChambreServiceImpl implements IChambreService {
     private ChambreMapper chambreMapper;
     private WebClient.Builder webClientBuilder;
     private KafkaTemplate<String,String> kafkaTemplate;
+    private StreamBridge  streamBridge;
     @Override
     public ChambreRepresentation createChambre (ChambreCommand chambreCommand  ) {
         Chambre chambre = chambreMapper.convertCommandToEntity(chambreCommand);
@@ -92,7 +95,9 @@ public class ChambreServiceImpl implements IChambreService {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         String formattedDateTime = now.format(formatter);
-        kafkaTemplate.send("notifTopic","Le "+ formattedDateTime + " chambre -- malade N° "+idMalade );
+//        kafkaTemplate.send("notifTopic","Le "+ formattedDateTime + " chambre -- malade N° "+idMalade );
+        streamBridge.send("notifTopic", Notif.builder().data("Le "+ formattedDateTime + " chambre -- malade N° "+idMalade).build()  );
+
 
         return chambreMapper.convertEntityToRepresentation(chambre);
     }
@@ -121,7 +126,9 @@ public class ChambreServiceImpl implements IChambreService {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
             String formattedDateTime = now.format(formatter);
-            kafkaTemplate.send("notifTopic","Le "+ formattedDateTime + " chambre ++ malade N° "+idMalade );
+//            kafkaTemplate.send("notifTopic","Le "+ formattedDateTime + " chambre ++ malade N° "+idMalade );
+                streamBridge.send("notifTopic", Notif.builder().data("Le "+ formattedDateTime + " chambre ++ malade N° "+idMalade).build()  );
+
 
         }else{
             throw new RuntimeException("Chambre pleine.");
