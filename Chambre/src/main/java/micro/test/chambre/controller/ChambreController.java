@@ -1,5 +1,6 @@
 package micro.test.chambre.controller;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 import micro.test.chambre.command.ChambreCommand;
 import micro.test.chambre.representation.ChambreRepresentation;
@@ -50,6 +51,7 @@ public class ChambreController {
     public ChambreRepresentation removeFromChambre(@RequestParam int idChambre , @RequestParam int idMalade){
         return iChambreService.removeFromChambre(idChambre , idMalade);
     }
+
 
     @GetMapping("/insert")
     public ChambreRepresentation insertIntoChambre(@RequestParam int idChambre , @RequestParam int idMalade){

@@ -1,5 +1,6 @@
 package micro.test.diagno.service;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import micro.test.diagno.command.DiagnoCommand;
 
 import micro.test.diagno.representation.DiagnoRepresentation;

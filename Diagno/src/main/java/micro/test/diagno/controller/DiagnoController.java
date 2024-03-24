@@ -1,6 +1,8 @@
 package micro.test.diagno.controller;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.AllArgsConstructor;
 import micro.test.diagno.command.DiagnoCommand;
 import micro.test.diagno.representation.DiagnoRepresentation;
@@ -57,10 +59,25 @@ public class DiagnoController {
     }
 
 
-    @CircuitBreaker(name = "diagno")
     @GetMapping("/malades/{id}")
+    @CircuitBreaker(name = "malade", fallbackMethod = "fallbackMethod")
+    @TimeLimiter(name = "malade")
+    @Retry(name = "malade")
     public Flux<MaladeRepresentation> findMaladeByIdMedecin(@PathVariable int id) {
-    return iDiagnoService.findMaladeByIdMedecin(id);
+        return iDiagnoService.findMaladeByIdMedecin(id);
     }
+
+
+    public Flux<MaladeRepresentation> fallbackMethod(Throwable throwable) {
+        return Flux.just(MaladeRepresentation.builder()
+                .idRepresentation(0)
+                .nomRepresentation("UNKNOWN")
+                .prenomRepresentation("UNKNOWN")
+                .usernameRepresentation("UNKNOWN")
+                .emailRepresentation("UNKNOWN")
+                .chambreIdRepresentation(0)
+                .build());
+    }
+
 
 }
