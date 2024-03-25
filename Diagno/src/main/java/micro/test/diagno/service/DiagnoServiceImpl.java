@@ -1,7 +1,6 @@
 package micro.test.diagno.service;
 
 
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import micro.test.diagno.command.DiagnoCommand;
@@ -18,6 +17,7 @@ import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Transactional
@@ -105,11 +105,12 @@ public class DiagnoServiceImpl implements IDiagnoService {
         List<Diagno> byMedecinId = iDiagnoRepository.findByMedecinId(id);
         List<Integer> list = byMedecinId.stream().map(d -> d.getMaladeId()).toList();
         return Flux.fromIterable(list)
-                .flatMapSequential(m-> webClientBuilder.build().get()
+                .flatMapSequential(maladesList-> webClientBuilder.build().get()
                         .uri("http://localhost:8081/malade",
-                                uriBuilder -> uriBuilder.queryParam("ids",m).build())
+                                uriBuilder -> uriBuilder.queryParam("ids",maladesList).build())
                         .retrieve()
                         .bodyToFlux(MaladeRepresentation.class));
+
     }
 
 

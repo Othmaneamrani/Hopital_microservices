@@ -2,8 +2,6 @@ package micro.test.malade.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import micro.test.malade.command.MaladeCommand;
 import micro.test.malade.mapper.MaladeMapper;
 import micro.test.malade.model.Malade;
@@ -16,7 +14,6 @@ import java.util.List;
 @Service
 @Transactional
 @AllArgsConstructor
-@Slf4j
 public class MaladeServiceImpl implements IMaladeService {
 
     private IMaladeRepository iMaladeRepository;
@@ -62,11 +59,7 @@ public class MaladeServiceImpl implements IMaladeService {
         return maladeMapper.convertEntityToRepresentation(malade);    }
 
     @Override
-    @SneakyThrows
     public List<MaladeRepresentation> getByIds(List<Integer> ids){
-        log.info("depart");
-        Thread.sleep(10000);
-        log.info("lafin");
         List<Malade> allById = iMaladeRepository.findAllById(ids);
         return maladeMapper.convertListEntityToListRepresentation(allById);
     }
